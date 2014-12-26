@@ -17,11 +17,11 @@ pad_y = 171
 window_x = 1280 
 window_y = 720
 debug = False
-prove = True
+prove = False
 gameover = False
 folder = str(int(time.time()))
 
-#Giant dictonary to hold key name and VK value
+#Giant dictonary to hold key name and VK value (from gist https://gist.github.com/chriskiehl/2906125)
 VK_CODE = {'backspace':0x08,
 			'tab':0x09,
 			'clear':0x0C,
@@ -169,6 +169,7 @@ VK_CODE = {'backspace':0x08,
 			"'":0xDE,
 			'`':0xC0} 
 
+#onscreen key positions with default window size and 1920x1080 resolution
 POSITIONS =  {'q': (268, 450),
 				'w': (354, 449),
 				'e': (449, 451),
@@ -196,22 +197,26 @@ POSITIONS =  {'q': (268, 450),
 				'n': (818, 614),
 				'm': (908, 613)}
 
+#do a leftclick
 def mouseClick():
 	win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,0,0)
 	time.sleep(.1)
 	win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP,0,0)
 	print "Left Click."  #completely optional. But nice for debugging purposes.
 
+#position mouse at cords (x, y)
 def mousePos(cord):
 	win32api.SetCursorPos((pad_x + cord[0], pad_y + cord[1]))
 	
+#get coordinates of cursor
 def get_cords():
 	x,y = win32api.GetCursorPos()
 	x = x - pad_x
 	y = y - pad_y
 	print x,y
 
-def press(*args):
+#press a specific key
+def pressKey(*args):
 	'''
 	one press, one release.
 	accepts as many arguments as you want. e.g. press('left_arrow', 'a','b').
@@ -221,12 +226,14 @@ def press(*args):
 		time.sleep(.05)
 		win32api.keybd_event(VK_CODE[i],0 ,win32con.KEYEVENTF_KEYUP ,0)
 
+#grab game with given windowsize and offset
 def screenGrab():
 	box = (pad_x, pad_y, pad_x + window_x, pad_y + window_y)
 	im = ImageGrab.grab(box)
 	##im.save(os.getcwd() + '\\Snap__' + str(int(time.time())) +'.png', 'PNG')
 	return im 
 
+#initialize new game (Focus game)
 def startGame():
 	#location of first menu
 	mousePos((628, 146))
@@ -235,13 +242,14 @@ def startGame():
 
 	#Spacebar to skip intro
 	time.sleep(.1)
-	press('spacebar')
+	pressKey('spacebar')
 
 	#location of first menu
 	mousePos((628, 146))
 	mouseClick()
 	time.sleep(.1)
 
+#Function to check the keys array for red keys
 def checkKeys(image):
 	for pos in POSITIONS:
 		colour = image.getpixel(POSITIONS[pos])
@@ -254,19 +262,23 @@ def checkKeys(image):
 				gameover = True
 				return
 		elif (colour[0] > 250 & colour[1] < 180  ): 
+			#red key press key and place mouse (not necessary but looks cool)
 			print pos + " is red"
 			mousePos(POSITIONS[pos])
-			press(pos)
+			pressKey(pos)
 			if prove:
+				#save make a area box containing the hit in the center
 				box = (POSITIONS[pos][0] - 10, POSITIONS[pos][1] - 10, POSITIONS[pos][0] + 10, POSITIONS[pos][1] + 10)
 				im = image.crop(box)
 				im.save(os.getcwd() + '\\' + folder + '\\Snap__' + pos + '_' + str(int(round(time.time() * 1000))) +'.png', 'PNG')
 				print "prove saved in folder"
 				print pos + " is " + str(colour)
 		else:
+			#green key do nothing
 			if debug:
 				print pos + " is " + str(colour)
 
+#Main loop, prepares game and checks the keys
 def main():
 	if debug:
 		mousePos(POSITIONS['v'])
