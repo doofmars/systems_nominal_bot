@@ -287,9 +287,9 @@ def main():
 	if prove:
 		if not os.path.exists(os.getcwd() + '\\' + folder):
 			os.makedirs(os.getcwd() + '\\' + folder)
-    	else:
-    		print "path already exists"
-    		return
+		else:
+			print "path already exists"
+			return
 
 	print "Starting new Game"
 	startGame()
