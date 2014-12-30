@@ -12,13 +12,15 @@ And window size of 1280x720
 """
 
 ## Globals
-pad_x = 320
+#Top left corner of game window
+pad_x = 320 
 pad_y = 171
+#Size of window
 window_x = 1280 
 window_y = 720
-debug = False
-prove = False
-gameover = False
+debug = False #additional debug output
+prove = False #Save screenshot of button to proove key for debugging
+gameover = False 
 folder = str(int(time.time()))
 
 #Giant dictonary to hold key name and VK value (from gist https://gist.github.com/chriskiehl/2906125)
@@ -262,10 +264,11 @@ def checkKeys(image):
 				gameover = True
 				return
 		elif (colour[0] > 250 & colour[1] < 180  ): 
-			#red key press key and place mouse (not necessary but looks cool)
+			#red key press key
 			print pos + " is red"
-			mousePos(POSITIONS[pos])
 			pressKey(pos)
+			if debug:
+				mousePos(POSITIONS[pos]) #place mouse at key position for debugging
 			if prove:
 				#save make a area box containing the hit in the center
 				box = (POSITIONS[pos][0] - 10, POSITIONS[pos][1] - 10, POSITIONS[pos][0] + 10, POSITIONS[pos][1] + 10)
