@@ -2,7 +2,7 @@ Systems Nominal Bot - Beat the game and save everyone
 =================================
 
 ##About the Bot
-Systems nominal bot is a simple Python script to play the game [System Nominals](http://www.nerdcubed.co.uk/games/) for you
+Systems nominal bot is a simple Python script to play the game [Systems Nominal](http://www.nerdcubed.co.uk/games/) for you
 To achieve this goal the game constantly takes screen shots from your game and analyzes them.
 If a key turns red the key is automatically pressed.
 I only made the bot to practice my personal coding skills. 
